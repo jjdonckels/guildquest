@@ -1,11 +1,24 @@
-import time
 
 class WorldClock:
-    def __init__(self):
-        self.currentTime = self.now()
+    @staticmethod
+    def toMins(d, h, m):
+        return d * 24 * 60 + h * 60 + m
 
-    def now(self):
-        return int(time.time() // 60)
+    @staticmethod
+    def fromMins(total):
+        d = total // (24 * 60)
+        rest = total % (24 * 60)
+        h = rest // 60
+        m = rest % 60
+        return d, h, m
 
-    def compare(self, t1, t2):
-        return t1 <= t2
+    @staticmethod
+    def format(total):
+        d, h, m = WorldClock.fromMins(total)
+        return f"Day {d} {h}:{m:02d}"
+
+    @staticmethod
+    def validRange(start, end):
+        if end is None:
+            return True
+        return end >= start

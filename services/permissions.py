@@ -1,11 +1,11 @@
 import uuid
 
 class SharePermission:
-    def __init__(self, sharedWith, permissionLevel):
+    def __init__(self, sharedWith, permissionLvl):
         self.permissionId = uuid.uuid4()
-        self.shaxwredWith = sharedWith        #
-        self.permissionLevel = permissionLevel  
-        self.canEdit = permissionLevel == "EDIT"
+        self.sharedWith = sharedWith        
+        self.permissionLvl = permissionLvl  
+        self.canEdit = permissionLvl == "EDIT"
 
     def __str__(self):
-        return f"Permission({self.sharedWith.username}, {self.permissionLevel})"
+        return f"Permission({self.sharedWith.username}, {self.permissionLvl})"

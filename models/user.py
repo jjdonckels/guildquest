@@ -9,18 +9,16 @@ class User:
         self.characters = []
         self.settings = Settings()
 
-    def create_campaign(self, name):
+    def createCampaign(self, name):
         campaign = Campaign(name, self)
         self.campaigns.append(campaign)
         return campaign
 
-    def delete_campaign(self, campaign_id):
-        self.campaigns = [
-            c for c in self.campaigns if c.campaign_id != campaign_id
-        ]
+    def deleteCampaign(self, campaignId):
+        self.campaigns = [x for x in self.campaigns if x.campaignId != campaignId]
 
-    def share_campaign(self, campaign, other_user, permission):
-        campaign.add_permission(other_user, permission)
+    def shareCampaign(self, campaign, otherUser, permission):
+        campaign.addPermission(otherUser, permission)
 
     def __str__(self):
         return f"User({self.username})"
