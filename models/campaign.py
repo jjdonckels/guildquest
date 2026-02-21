@@ -13,8 +13,8 @@ class Campaign:
     def rename(self, newName):
         self.name = newName
 
-    def setVisibil(self, visibilType):
-        self.visibility = visibilType  
+    def setVisibility(self, visibilityType):
+        self.visibility = visibilityType  
 
     def archive(self):
         self.archived = True         
