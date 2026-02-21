@@ -12,7 +12,7 @@ class localTime: #displaying the local time
 
 class bothTime: #displaying both of them
     def format(self, worldMins, realm=None):
-        world = WorldClock.format(world      Mins) #format workold them formal local
+        world = WorldClock.format(worldMins) #format workold them formal local
         if realm is None:
             return f"World: {world}"
         local = WorldClock.format(worldMins + realm.offset)

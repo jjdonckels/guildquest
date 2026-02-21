@@ -39,7 +39,6 @@ class QuestEvent:
     
     def toDisplayString(self, settings):
         strategy = settings.getTimeDisplayStrategy()
-        temp = settings.getTimeDisplay()
         realm = settings.currentRealm if settings.currentRealm else self.realm
         start = strategy.format(self.startTime, realm)
 

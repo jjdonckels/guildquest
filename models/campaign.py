@@ -5,7 +5,7 @@ class Campaign:
     def __init__(self, name, owner, visibil="PRIVATE"):
         self.campaignId = uuid.uuid4()
         self.name = name
-        self.visibil = visibil     
+        self.visibility = visibil     
         self.archived = False
         self.owner = owner               
         self.events = []      
@@ -14,7 +14,7 @@ class Campaign:
         self.name = newName
 
     def setVisibil(self, visibilType):
-        self.visibil = visibilType  
+        self.visibility = visibilType  
 
     def archive(self):
         self.archived = True         
@@ -36,4 +36,4 @@ class Campaign:
         return [x for x in self.events if start <= x.startTime <= end]
 
     def __str__(self):
-        return (f"Campaign(name={self.name}, "f"visibility={self.visibil}, " f"archived={self.archived}, " f"id={self.campaignId})")
+        return (f"Campaign(name={self.name}, "f"visibility={self.visibility}, " f"archived={self.archived}, " f"id={self.campaignId})")

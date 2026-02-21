@@ -4,6 +4,7 @@ from models.campaign import Campaign
 from models.realm import Realm
 from services.worldClock import WorldClock
 from models.questEvent import QuestEvent
+from commands.questEventCommands import ListEventsCommand, AddEventCommand, RemoveEventCommand
 
 def pickInt(prompt, minVal=None, maxVal=None):
     while True:
@@ -223,49 +224,18 @@ def questEventsMenu(user, campaign):
         print("0) Back")
         c = input("Choose: ").strip()
 
-        if c == "1":
-            if not campaign.events:
-                print("No events yet.")
-            else:
-                for e in campaign.events:
-                    print(formatEvent(e, user))
-            pause()
+        commands = {
+            "1": ListEventsCommand(user, campaign, formatEvent, pause),
+            "2": AddEventCommand(campaign, realms, pickInt),
+            "4": RemoveEventCommand(campaign, pickInt),
+        }
 
-        elif c == "2":
-            if not realms:
-                print("No realms exist. Create one first.")
-                continue
+        if c in commands:
+            commands[c].execute()
+            continue
 
-            title = input("Event title: ").strip()
+        if c == "3":
 
-            day = pickInt("Start day: ", 0)
-            hour = pickInt("Start hour (0-23): ", 0, 23)
-            minute = pickInt("Start minute (0-59): ", 0, 59)
-            start = WorldClock.toMins(day, hour, minute)
-
-            hasEnd = input("Has end time? (y/n): ").strip().lower()
-            end = None
-            if hasEnd == "y":
-                eday = pickInt("End day: ", 0)
-                ehour = pickInt("End hour (0-23): ", 0, 23)
-                emin = pickInt("End minute (0-59): ", 0, 59)
-                end = WorldClock.toMins(eday, ehour, emin)
-
-            print("Pick realm:")
-            for i, r in enumerate(realms):
-                offset = getattr(r, "offset", getattr(r, "offsetMinutes", 0))
-                print(f"{i+1}) {r.name} (offset={offset}m)")
-            ridx = pickInt("Realm #: ", 1, len(realms)) - 1
-            realm = realms[ridx]
-
-            try:
-                event = QuestEvent(title, start, realm, end)
-                campaign.addQuestEvent(event)
-                print("Event added.")
-            except Exception as ex:
-                print("Could not create event:", ex)
-
-        elif c == "3":
             if not campaign.events:
                 print("No events to edit.")
                 continue
@@ -320,17 +290,6 @@ def questEventsMenu(user, campaign):
                 print("Updated.")
             else:
                 print("Invalid choice.")
-
-        elif c == "4":
-            if not campaign.events:
-                print("No events to remove.")
-                continue
-            for i, e in enumerate(campaign.events):
-                print(f"{i+1}) {e.title} | id={e.eventId}")
-            idx = pickInt("Pick event #: ", 1, len(campaign.events)) - 1
-            eventId = campaign.events[idx].eventId
-            campaign.removeQuestEvent(eventId)
-            print("Removed.")
 
         elif c == "5":
             day = pickInt("Which day? ", 0)
