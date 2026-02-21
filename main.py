@@ -212,6 +212,60 @@ def campaignMenu(user, campaign):
         else:
             print("Invalid choice.")
 
+
+#helpers for questeventmenu
+def pickEvent(campaign):
+    if not campaign.events:
+        print("No events to edit.")
+        return None
+
+    for i, x in enumerate(campaign.events):
+        print(f"{i+1}) {x.title} | id={x.eventId}")
+    idx = pickInt("Pick event #: ", 1, len(campaign.events)) - 1
+    return campaign.events[idx]
+
+def editEventTitle(e):
+    newTitle = input("New title: ").strip()
+    if hasattr(e, "updateTitle"):
+        e.updateTitle(newTitle)
+    else:
+        e.title = newTitle
+    print("Updated.")
+
+
+def editEventTime(e):
+    d = pickInt("New start day: ", 0)
+    h = pickInt("New start hour (0-23): ", 0, 23)
+    m = pickInt("New start minute (0-59): ", 0, 59)
+    start = WorldClock.toMins(d, h, m)
+
+    hasEnd = input("Has end time? (y or yes)/n or no: ").strip().lower()
+    end = None
+    if hasEnd == ["y", "yes"]:
+        ed = pickInt("New end day: ", 0)
+        eh = pickInt("New end hour (0-23): ", 0, 23)
+        em = pickInt("New end minute (0-59): ", 0, 59)
+        end = WorldClock.toMins(ed, eh, em)
+
+    try:
+        e.updateTime(start, end)
+        print("Updated.")
+    except Exception as ex:
+        print("Couldn't update time:", ex)
+
+
+def editEventRealm(e, realms):
+    for i, x in enumerate(realms):
+        print(f"{i+1}) {x.name}")
+    ridx = pickInt("Realm #: ", 1, len(realms)) - 1
+    newRealm = realms[ridx]
+
+    if hasattr(e, "updateRealm"):
+        e.updateRealm(newRealm)
+    else:
+        e.realm = newRealm
+    print("Updated.")
+
 def questEventsMenu(user, campaign):
     while True:
         print("\n--- Quest Events ---")
@@ -235,14 +289,9 @@ def questEventsMenu(user, campaign):
             continue
 
         if c == "3":
-
-            if not campaign.events:
-                print("No events to edit.")
+            e = pickEvent(campaign)
+            if e is None:
                 continue
-            for i, e in enumerate(campaign.events):
-                print(f"{i+1}) {e.title} | id={e.eventId}")
-            idx = pickInt("Pick event #: ", 1, len(campaign.events)) - 1
-            e = campaign.events[idx]
 
             print("Edit what?")
             print("1) Title")
@@ -251,70 +300,13 @@ def questEventsMenu(user, campaign):
             sub = input("Choose: ").strip()
 
             if sub == "1":
-                newTitle = input("New title: ").strip()
-                if hasattr(e, "updateTitle"):
-                    e.updateTitle(newTitle)
-                else:
-                    e.title = newTitle
-                print("Updated.")
-
+                editEventTitle(e)
             elif sub == "2":
-                day = pickInt("New start day: ", 0)
-                hour = pickInt("New start hour (0-23): ", 0, 23)
-                minute = pickInt("New start minute (0-59): ", 0, 59)
-                start = WorldClock.toMins(day, hour, minute)
-
-                hasEnd = input("Has end time? (y/n): ").strip().lower()
-                end = None
-                if hasEnd == "y":
-                    eday = pickInt("New end day: ", 0)
-                    ehour = pickInt("New end hour (0-23): ", 0, 23)
-                    emin = pickInt("New end minute (0-59): ", 0, 59)
-                    end = WorldClock.toMins(eday, ehour, emin)
-
-                try:
-                    e.updateTime(start, end)
-                    print("Updated.")
-                except Exception as ex:
-                    print("Could not update time:", ex)
-
+                editEventTime(e)
             elif sub == "3":
-                for i, r in enumerate(realms):
-                    print(f"{i+1}) {r.name}")
-                ridx = pickInt("Realm #: ", 1, len(realms)) - 1
-                newRealm = realms[ridx]
-                if hasattr(e, "updateRealm"):
-                    e.updateRealm(newRealm)
-                else:
-                    e.realm = newRealm
-                print("Updated.")
+                editEventRealm(e, realms)
             else:
-                print("Invalid choice.")
-
-        elif c == "5":
-            day = pickInt("Which day? ", 0)
-            dayEvents = campaign.getEventsForDay(day)
-            if not dayEvents:
-                print("No events that day.")
-            else:
-                for e in dayEvents:
-                    print(formatEvent(e, user))
-            pause()
-
-        elif c == "6":
-            startDay = pickInt("Week starting day? ", 0)
-            weekEvents = campaign.getEventsForWeek(startDay)
-            if not weekEvents:
-                print("No events that week.")
-            else:
-                for e in weekEvents:
-                    print(formatEvent(e, user))
-            pause()
-
-        elif c == "0":
-            return
-        else:
-            print("Invalid choice.")
+                print("Invalid choice.")       
 
 if __name__ == "__main__":
     mainMenu()
