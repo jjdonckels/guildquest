@@ -1,0 +1,47 @@
+Implementation by Amanda Riordan, riordana@uci.edu, ID# 95773118
+
+JDK 25
+
+Operation Guide (number correlates to the requirement number(s) in Assignemnt 1-1; note that they are in order of a sample flow, not in order of requirement number, and are categorized based on what main feature they are a part of):
+
+Users
+Requirement 2: GuildQuest supports multiple users, each of which may have multiple campaigns.
+    To create a user, enter 0 on the login screen. You can logout and switch accounts by selecting the logout option (4) followed by the option (2) to log into (or create) another account.
+    To create a campaign, select the option to select a campaign (2) from the user homepage, bringing you to the campaign homepage. After selecting that option, you will be able to create campaigns by selecting the option to create a campaign (1). You can repeat this multiple times on one user or on multiple different users.
+
+
+Campaigns
+Requirement 3: Users can add, remove, and update campaigns (e.g., rename a campaign, archive a campaign, change its visibility).
+Requirement 10: GuildQuest allows users to set a campaign as public or private, and to toggle between these.
+Requirement 11: A user can share a private campaign with another user. Sharing must support at least one permission level.
+    From the campaign homepage described in the step above, you have the option to create (1) or delete (2) a campaign. To update a campaign, you must first select a campaign (3) from the homepage. You may share the campaign from this page (2) and input the permission level for that user (view only or editable) or make other edits by selecting the option to edit the campaign (1). If you have edit permissions on the campaign, you will be brought to another menu where you may edit the name, visibility, and archive status.
+
+
+Quest Events
+Requirement 4: A Campaign contains Quest Events. Each Quest Event has a name/title, a start time in World Clock time, an (optional) end time in World Clock time, and a Realm.
+Requirement 5: Users can add, remove, and update Quest Events, including editing the event’s name, times, and realm.
+Requirement 7: When displaying a Quest Event to a user, GuildQuest must be able to show the event’s time in World Clock time and/or Realm local time (depending on User settings).
+    To access the Quest Events for a particular campaign, you must first navigate to the campaign homepage (described above) and select the option (3) to modify or view quest events. If you do not have edit permissions, you can only view the quest event details. Otherwise, you will be brought to a selection screen where you may create a quest event (1), delete a quest event (2), view the quest event's details (4), or modify the quest event (3). If you choose to view the quest event's details, you will be shown its title, realm, start time, and end time. The start time and end time will be displayed in either World Clock Units, Realm Clock Units, or both, depending on the User's settings. If you select to modify a quest event, you will have to select a quest event by name before being brought to a selection where you may edit its title, start time (in minutes), runtime (this is used to calculate the end time), and the realm in which it takes place.
+
+Characters & Inventory
+Requirement 13: GuildQuest supports Characters per user. Each character has at least a name, level, and class.
+Requirement 15: GuildQuest supports Inventory per character. Users can add/remove/update items in inventory.
+    To create or select a character, navigate to the user homepage, and choose to Select/Delete a character (1). You will then be brought to a menu where you can create a new character, select a character, or delete a character. If you choose to create a character, you will be asked to input their name and class. All characters start at level 0. If you select a character, you will be brought to the character homepage, where you can move realms (1) (this edits the realm location in the parent user's settings), display the current time (3) (world clock or realm-local depending on user settings), or view your inventory (2). If you choose to view your inventory, you will be brought to a menu where you will be shown your inventory before being given the options to pick up an item (1), drop an item (2), or update an item (3). Picking up an item will require you to create a new item by inputting its name, description, rarity, and quantity. Updating an item will allow you to change any of those fields.
+
+Settings
+Requirement 8: GuildQuest has a Settings screen that allows the user to configure their current realm, the app’s theme, and a time display preference.
+    A user's settings menu can be accessed by either the user homepage (described above) or character homepage (described above). After selecting the settings option, you will be shown your current settings and given the option to move realms (1), change app theme (2), or change the time display preferences (3). Selecting any of these options will allow you to update your settings accordingly. There is currently only one theme for the app because there is no GUI and it is still entirely text based. There are 2 realms created by default which the user can move between. There are 3 different time display modes (world clock, local clock, both).
+
+Realms
+Requirement 6: GuildQuest supports multiple Realms, which are physical locations in the GuildQuest world/universe. Each Realm has a name and (optional) description, a map identity, and a local time rule.
+    By default, our GuildQuest game has two realms: Hub and SampleRealm. Realms contain titles, descriptions, identities, and local time rules. The GuildQuest class holds access to all Realms and users cannot create Realms. Realm creation exists; if it is passed no arguments, a default (Hub) Realm will be created. Otherwise, Realms can be created by inputting data for all the fields. Realms have a fixed offset for time, and can convert world clock times to their own local time.
+
+Clock
+Requirement 1: GuildQuest must support game time tracked in days, hours, and minutes using a universal World Clock.
+* For the initial version, you may define day/week/month/year in World Clock units.
+    There is a universal singleton WorldClock that is started when the game is launched. The clock is displayed in military time (hours 0 - 23). You may view the current time from the character homepage (described above). Realms have time offsets to convert the world clock to local time. The World clock is measured in real time by minute, starting at 0:00 on January 1st, year 0. World clock time is tracked by minutes. When a QuestEvent is created, users must input time in minutes.
+
+
+
+
+
