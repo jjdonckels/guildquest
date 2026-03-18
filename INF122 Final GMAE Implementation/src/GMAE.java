@@ -1,5 +1,6 @@
 import lombok.Getter;
 import lombok.Setter;
+//singleton class & facade
 
 @Getter
 @Setter
@@ -43,4 +44,9 @@ public class GMAE {
 
     public Realm hub(){ return realmController.hub(); }
 */
+
+
+    public static void Main(String args[]){
+
+    }
 }
