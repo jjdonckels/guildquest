@@ -1,3 +1,3 @@
-public class PeacefulNPC implements Entity {
+public interface PeacefulNPC extends Entity {
 
 }

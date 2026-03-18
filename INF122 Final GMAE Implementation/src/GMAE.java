@@ -47,6 +47,7 @@ public class GMAE {
 
 
     public static void Main(String args[]){
+        //launch menu of mini-adventures and let them choose
 
     }
 }

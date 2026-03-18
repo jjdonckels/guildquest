@@ -1,3 +1,3 @@
-public interface Skeleton implements Enemy{
+public class Skeleton implements Enemy{
 
 }
