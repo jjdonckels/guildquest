@@ -1,2 +1,3 @@
-public interface Hazard extends Entity{
+public interface Hazard{
+    String getDescription();
 }

@@ -1,6 +1,4 @@
-import java.util.List;
-
-public interface NaturalHazard extends Hazard{
-    public boolean diceRollForDamage(int maxRoll);
-    public void doDamage(List<Mob> victims);
+public interface NaturalHazard extends Hazard {
+    int getSeverity();
+    void applyToPlayers(Player player1, Player player2, String choice);
 }
