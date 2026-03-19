@@ -1,3 +1,6 @@
-public interface ItemType extends Entity{
-    public String displayInfo();
+public enum ItemType {
+    WEAPON,
+    CONSUMABLE,
+    RELIC,
+    POWERUP
 }

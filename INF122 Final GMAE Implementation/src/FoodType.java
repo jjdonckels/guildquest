@@ -8,6 +8,12 @@ public class FoodType implements ItemType{
     private String description;
     private int healPoints;
 
+    public FoodType(String name, String description, int healPoints) {
+        this.name = name;
+        this.description = description;
+        this.healPoints = healPoints;
+    }
+
     @Override
     public String displayInfo() {
         return String.format("""
