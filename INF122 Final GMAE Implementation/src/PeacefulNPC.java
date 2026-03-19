@@ -1,3 +1,3 @@
-public interface PeacefulNPC extends Entity {
+public interface PeacefulNPC extends Mob {
 
 }
