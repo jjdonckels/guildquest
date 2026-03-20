@@ -1,19 +1,26 @@
 import java.util.Random;
 
-//singleton class (+1 design pattern)
-
 public class Dice {
-    private final Random rand = new Random();
-    public static Dice instance;
+    private final int sides;
 
-    public Dice(){}
-
-    public static Dice getInstance(){
-       if(instance == null){ instance = new Dice(); }
-       return instance;
+    public Dice(int sides) {
+        if (sides < 2) {
+            throw new IllegalArgumentException("Dice must have at least 2 sides.");
+        }
+        this.sides = sides;
     }
 
-    public int roll(int max){
-        return rand.nextInt(1, max + 1);
+    public int getSides() {return sides;}
+
+    public int roll(Random random) {
+        if (random == null) {
+            throw new IllegalArgumentException("Random cannot be null.");
+        }
+        return random.nextInt(sides) + 1; // shift off of 0
+    }
+
+    @Override
+    public String toString() {
+        return "Dice " + sides;
     }
 }
