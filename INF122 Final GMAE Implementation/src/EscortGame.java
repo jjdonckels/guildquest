@@ -16,6 +16,7 @@ public class EscortGame implements MiniGame {
     private final long seed;
     private Random random;
     private final Dice dice;
+    private final CombatSystem combatSystem;
 
     private Position startPosition;
     private Position endPosition;
@@ -30,6 +31,7 @@ public class EscortGame implements MiniGame {
         this.realm = builder.realm;
         this.players = new ArrayList<>(builder.players);
         this.dice = new Dice(20);
+        this.combatSystem = new CombatSystem();
 
         this.board = null;
         this.escortee = null;
@@ -57,6 +59,8 @@ public class EscortGame implements MiniGame {
     public long getSeed() {return seed;}
 
     public Dice getDice() {return dice;}
+
+    public CombatSystem getCombatSystem() {return combatSystem;}
 
     public Position getStartPosition() {return startPosition;}
 
@@ -115,8 +119,35 @@ public class EscortGame implements MiniGame {
     public void processTurn(PlayableCharacter player) {
         if (player == null)
             throw new IllegalArgumentException("Player cannot be null.");
+        System.out.println("\n--- Turn " + currentTurn + " (" + player.getName() + ") ---");
         if (!player.isAlive())
             return;
+        int roll = dice.roll(random);
+        System.out.println(player.getName() + " roll: " + roll + ".");
+        boolean moveSucceeded = roll >= 10;
+        if (moveSucceeded) {
+            Direction direction = getRandomDirection();
+            Position attemptedPosition = player.attemptMove(direction);
+            System.out.println(player.getName() + " attempts to move " + direction + " to " + attemptedPosition + ".");
+            if (board.isValidMove(attemptedPosition)) {
+                board.updatePosition(player, attemptedPosition);
+                System.out.println(player.getName() + " moved successfully.");
+                handleTileInteractions(player);
+                attackEnemyOnCurrentTile(player);
+            } else {
+                System.out.println(player.getName() + " could not move out of bounds.");
+            }
+        } else {
+            System.out.println(player.getName() + " failed the movement roll.");
+        }
+        if (escortee != null && escortee.isAlive() && !checkWinCondition()) {
+            escortee.followClosestPlayerOrEndPoint(players, endPosition);
+            if (board.isValidMove(escortee.getPosition())) {
+                board.rebuildEntityMap();
+                handleEscorteeTileInteractions();
+            }
+        }
+        currentTurn++;
 
         // Placeholder for full turn logic.
         // Later this will:
@@ -127,6 +158,65 @@ public class EscortGame implements MiniGame {
         // - apply hazards/powerups
         // - move escortee
         // - run enemy turns
+    }
+
+    private Direction getRandomDirection() {
+        Direction[] directions = Direction.values();
+        return directions[random.nextInt(directions.length)];
+    }
+
+    private void handleTileInteractions(PlayableCharacter player) {
+        List<Entity> entitiesAtTile = board.getEntitiesAt(player.getPosition());
+        List<Entity> toRemove = new ArrayList<>();
+        for (Entity entity : entitiesAtTile) {
+            if (entity == player)
+                continue;
+            if (entity instanceof Hazard) {
+                Hazard hazard = (Hazard) entity;
+                hazard.applyEffect(player);
+                System.out.println(player.getName() + " took " + hazard.getDamage() + " damage from a hazard.");
+            }
+            if (entity instanceof PowerUp ) {
+                PowerUp powerUp = (PowerUp) entity;
+                powerUp.applyEffect(player);
+                toRemove.add(powerUp);
+                System.out.println(player.getName() + " picked up " + powerUp.getSymbol() + ".");
+            }
+        }
+        for (Entity entity : toRemove)
+            board.removeEntity(entity);
+    }
+
+    private void handleEscorteeTileInteractions() {
+        List<Entity> entitiesAtTile = board.getEntitiesAt(escortee.getPosition());
+        for (Entity entity : entitiesAtTile) {
+            if (entity == escortee)
+                continue;
+            if (entity instanceof Hazard ) {
+                Hazard hazard = (Hazard) entity;
+                hazard.applyEffect(escortee);
+                System.out.println("Escortee took " + hazard.getDamage() + " damage from a hazard.");
+            }
+        }
+    }
+
+    private void attackEnemyOnCurrentTile(PlayableCharacter player) {
+        List<Entity> entitiesAtTile = board.getEntitiesAt(player.getPosition());
+        for (Entity entity : entitiesAtTile) {
+            if (entity instanceof Enemy) {
+                Enemy enemy = (Enemy) entity;
+                if (enemy.isAlive()) {
+                    int damage = player.getAttackPower();
+                    combatSystem.resolveAttack(player, enemy);
+                    System.out.println(player.getName() + " attacked an enemy for " + damage + " damage.");
+                }
+                if (!enemy.isAlive()) {
+                    board.removeEntity(enemy);
+                    System.out.println("Enemy defeated.");
+                }
+                return;
+            }
+        }
     }
 
     public void spawnEntities() {
