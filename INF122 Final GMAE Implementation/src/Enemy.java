@@ -20,14 +20,13 @@ public class Enemy extends Entity {
         target.takeDamage(attackPower);
     }
 
-    // Board doesn't yet exist so this is commented out
-    /*public void takeTurn(Board board) {
+    public void takeTurn(Board board) {
         if (board == null)
             throw new IllegalArgumentException("Board cannot be null.");
 
         // Placeholder for future enemy AI behavior.
         // For now, enemies do nothing on their turn.
-    }*/
+    }
 
     @Override
     public String toString() {
