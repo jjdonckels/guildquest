@@ -3,4 +3,5 @@ public interface MiniGame {
     void reset();
     boolean checkWinCondition();
     boolean checkLoseCondition();
+    long getSeed();
 }
