@@ -1,26 +1,37 @@
 public class PlayableCharacter extends Entity {
     private static final int DEFAULT_MAX_HEALTH = 200;
 
-    private final String name;
+    private final String name;           // player name (the person)
+    private final String characterName;  // in-game character name
     private final int attackPower;
     private int strengthBoostTurns;
 
-    public PlayableCharacter(String name, Position position, String symbol, int attackPower) {
+    public PlayableCharacter(String name, String characterName, Position position, String symbol, int attackPower) {
         super(position, DEFAULT_MAX_HEALTH, symbol);
         if (name == null || name.isBlank())
             throw new IllegalArgumentException("Name cannot be null or blank.");
+        if (characterName == null || characterName.isBlank())
+            throw new IllegalArgumentException("Character name cannot be null or blank.");
         if (attackPower < 0)
             throw new IllegalArgumentException("Attack power cannot be negative.");
         this.name = name;
+        this.characterName = characterName;
         this.attackPower = attackPower;
         this.strengthBoostTurns = 0;
     }
 
-    public String getName() {return name;}
+    // Backwards-compatible constructor (character name defaults to player name)
+    public PlayableCharacter(String name, Position position, String symbol, int attackPower) {
+        this(name, name, position, symbol, attackPower);
+    }
 
-    public int getBaseAttackPower() {return attackPower;}
+    public String getName() { return name; }
 
-    public int getStrengthBoostTurns() {return strengthBoostTurns;}
+    public String getCharacterName() { return characterName; }
+
+    public int getBaseAttackPower() { return attackPower; }
+
+    public int getStrengthBoostTurns() { return strengthBoostTurns; }
 
     public int getAttackPower() {
         if (strengthBoostTurns > 0)
@@ -73,7 +84,8 @@ public class PlayableCharacter extends Entity {
     public String toString() {
         return "{PlayableCharacter "
                 + "id: " + getId()
-                + ", name: " + getName()
+                + ", player: " + name
+                + ", character: " + characterName
                 + ", position=" + getPosition()
                 + ", health=" + getHealth() + "/" + getMaxHealth()
                 + ", attackPower=" + attackPower
