@@ -3,7 +3,7 @@ public abstract class Entity {
 
     private final int id;
     private Position position;
-    private final Position spawnPosition;
+    private Position spawnPosition;
     private int health;
     private final int maxHealth;
     private String symbol;
@@ -42,6 +42,12 @@ public abstract class Entity {
         this.symbol = symbol;
     }
 
+    public void setSpawnPosition(Position spawnPosition) {
+        if (spawnPosition == null)
+            throw new IllegalArgumentException("Spawn position cannot be null.");
+        this.spawnPosition = spawnPosition;
+    }
+
     public void move(Position newPos) {
         if (newPos == null)
             throw new IllegalArgumentException("New position cannot be null.");
@@ -77,8 +83,8 @@ public abstract class Entity {
     }
 }
 
-class TestEntity extends Entity {
-    public TestEntity(Position position, int maxHealth, String symbol) {
-        super(position, maxHealth, symbol);
+class Destination extends Entity {
+    public Destination(Position position) {
+        super(position, 0, "\ud83c\udfc1");
     }
 }
