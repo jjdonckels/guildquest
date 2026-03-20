@@ -6,9 +6,6 @@ public abstract class Item {
     private final ItemType itemType;
 
     protected Item(String name, ItemType itemType) {
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Item name cannot be null or blank");
-        }
         this.name = name;
         this.itemType = itemType;
     }

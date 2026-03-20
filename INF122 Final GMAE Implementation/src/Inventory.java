@@ -7,7 +7,7 @@ import java.util.List;
 @Getter
 @Setter
 public class Inventory {
-    private List<ItemType> items;
+    private List<Item> items;
     private int capacity;
     private ItemType itemType;
 
@@ -17,15 +17,19 @@ public class Inventory {
         this.items = new ArrayList<>();
     }
 
-    public boolean addItem(ItemType item) {
+    public boolean addItem(Item item) {
         if (this.items.size() >= this.capacity) {
+            return false;
+        }
+        // enforce type safety by itemType in this inventory
+        if (item.getItemType() != this.itemType) {
             return false;
         }
         this.items.add(item);
         return true;
     }
 
-    public boolean removeItem(ItemType item) {
+    public boolean removeItem(Item item) {
         return this.items.remove(item);
     }
 
