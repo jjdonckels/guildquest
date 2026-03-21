@@ -1,23 +1,38 @@
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+@Getter
+@Setter
 public class PlayableCharacter extends Entity {
     private static final int DEFAULT_MAX_HEALTH = 200;
 
     private final String name;           // player name (the person)
-    private final String characterName;  // in-game character name
-    private final int attackPower;
+    private final String characterName;
+    private final int attackModifier;
     private int strengthBoostTurns;
+    private List<InventoryItem> inventory; //taken from Amanda's implementation amanda-implementation/INF122Assignment3/src/Character.java
 
-    public PlayableCharacter(String name, String characterName, Position position, String symbol, int attackPower) {
+    public PlayableCharacter(String name, String characterName, Position position, String symbol, int attackModifier) {
         super(position, DEFAULT_MAX_HEALTH, symbol);
         if (name == null || name.isBlank())
             throw new IllegalArgumentException("Name cannot be null or blank.");
         if (characterName == null || characterName.isBlank())
             throw new IllegalArgumentException("Character name cannot be null or blank.");
-        if (attackPower < 0)
+        if (attackModifier < 0)
             throw new IllegalArgumentException("Attack power cannot be negative.");
         this.name = name;
         this.characterName = characterName;
-        this.attackPower = attackPower;
+        this.attackModifier = attackModifier;
         this.strengthBoostTurns = 0;
+        this.inventory = new ArrayList<>();
+        //populate with default inventory items
+        this.inventory.add(new Weapon("Wooden Sword", "A basic wooden sword.", 1, 4));
+        this.inventory.add(new Armor("Leather Armor", "Basic leather armor. Basically just clothing.", 1, 5));
+        this.inventory.add(new HealingItem("Apple", "A fresh apple! They say one a day keeps the doctor away.", 1, 5));
     }
 
     // Backwards-compatible constructor (character name defaults to player name)
@@ -25,18 +40,30 @@ public class PlayableCharacter extends Entity {
         this(name, name, position, symbol, attackPower);
     }
 
-    public String getName() { return name; }
+    public int getDefense() {
+        return inventory.stream()
+                .filter(item -> item instanceof Armor)
+                .map(item -> (Armor) item)
+                .mapToInt(Armor::getDefense)
+                .max()
+                .orElse(0);
+    }
 
-    public String getCharacterName() { return characterName; }
-
-    public int getBaseAttackPower() { return attackPower; }
-
-    public int getStrengthBoostTurns() { return strengthBoostTurns; }
 
     public int getAttackPower() {
         if (strengthBoostTurns > 0)
-            return attackPower * 2;
-        return attackPower;
+            return (inventory.stream()
+                    .filter(item -> item instanceof Weapon)
+                    .map(item -> (Weapon) item)
+                    .mapToInt(Weapon::getDamage)
+                    .max()
+                    .orElse(0) * attackModifier * 2);
+        return inventory.stream()
+                .filter(item -> item instanceof Weapon)
+                .map(item -> (Weapon) item)
+                .mapToInt(Weapon::getDamage)
+                .max()
+                .orElse(0) * attackModifier;
     }
 
     public void setStrengthBoostTurns(int strengthBoostTurns) {
@@ -54,6 +81,16 @@ public class PlayableCharacter extends Entity {
     public void consumeStrengthBoostTurn() {
         if (strengthBoostTurns > 0)
             strengthBoostTurns--;
+    }
+
+    public void pickupItem(InventoryItem item){
+        if(inventory.contains(item)){ item.pickup(); }
+        else { inventory.add(item); }
+    }
+
+    public void dropItem(InventoryItem item){
+        if(inventory.contains(item)){ item.drop(); }
+        else { System.out.println("You do not have this item."); }
     }
 
     public void attack(Entity target) {
@@ -88,7 +125,8 @@ public class PlayableCharacter extends Entity {
                 + ", character: " + characterName
                 + ", position=" + getPosition()
                 + ", health=" + getHealth() + "/" + getMaxHealth()
-                + ", attackPower=" + attackPower
+                + ", attackPower=" + getAttackPower()
+                + ", defense=" + getDefense()
                 + ", strengthBoostTurns=" + strengthBoostTurns
                 + ", symbol='" + getSymbol() + "'}";
     }

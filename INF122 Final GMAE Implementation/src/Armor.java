@@ -15,4 +15,6 @@ public class Armor extends InventoryItem {
                 + %s Defense.
                 """, super.getName(), super.getQuantity(), super.getDescription(), this.defense);
     }
+
+    public int getDefense() { return this.defense; }
 }

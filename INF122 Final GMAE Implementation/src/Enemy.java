@@ -1,11 +1,18 @@
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Enemy extends Entity {
     private final int attackPower;
+    private final int defense;
 
-    public Enemy(Position position, String symbol, int maxHealth, int attackPower) {
+    public Enemy(Position position, String symbol, int maxHealth, int attackPower, int defense) {
         super(position, maxHealth, symbol);
         if (attackPower < 0)
             throw new IllegalArgumentException("Attack power cannot be negative.");
         this.attackPower = attackPower;
+        this.defense = defense;
     }
 
     public int getAttackPower() {return attackPower;}

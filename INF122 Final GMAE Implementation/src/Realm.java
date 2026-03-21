@@ -66,6 +66,7 @@ public abstract class Realm {
 class FireRealm extends Realm {
     private static final int BASE_ENEMY_HEALTH = 30;
     private static final int BASE_ENEMY_ATTACK = 15;
+    private static final int BASE_ENEMY_DEFENSE = 12;
     private static final int HAZARD_DAMAGE = 20;
     private static String defaultHazard = "\ud83d\udd25";
     private static String defaultEnemy = "\ud83d\udc09";
@@ -94,7 +95,8 @@ class FireRealm extends Realm {
             throw new IllegalArgumentException("Position and difficulty cannot be null.");
         int scaledHealth = (int) (BASE_ENEMY_HEALTH * difficulty.getHealthMultiplier());
         int scaledAttack = (int) (BASE_ENEMY_ATTACK * difficulty.getDamageMultiplier());
-        return new Enemy(position, enemyStr, scaledHealth, scaledAttack);
+        int scaledDefense = (int) (BASE_ENEMY_DEFENSE * difficulty.getDamageMultiplier());
+        return new Enemy(position, enemyStr, scaledHealth, scaledAttack, scaledDefense);
     }
 
     @Override
@@ -108,6 +110,7 @@ class FireRealm extends Realm {
 class WaterRealm extends Realm {
     private static final int BASE_ENEMY_HEALTH = 30;
     private static final int BASE_ENEMY_ATTACK = 15;
+    private static final int BASE_ENEMY_DEFENSE = 8;
     private static final int HAZARD_DAMAGE = 20;
     private static String defaultHazard = "\ud83c\udf0a";
     private static String defaultEnemy = "\ud83e\udd88";
@@ -136,7 +139,8 @@ class WaterRealm extends Realm {
             throw new IllegalArgumentException("Position and difficulty cannot be null.");
         int scaledHealth = (int) (BASE_ENEMY_HEALTH * difficulty.getHealthMultiplier());
         int scaledAttack = (int) (BASE_ENEMY_ATTACK * difficulty.getDamageMultiplier());
-        return new Enemy(position, enemyStr, scaledHealth, scaledAttack);
+        int scaledDefense = (int) (BASE_ENEMY_DEFENSE * difficulty.getDamageMultiplier());
+        return new Enemy(position, enemyStr, scaledHealth, scaledAttack, scaledDefense);
     }
 
     @Override
@@ -150,6 +154,7 @@ class WaterRealm extends Realm {
 class EarthRealm extends Realm {
     private static final int BASE_ENEMY_HEALTH = 30;
     private static final int BASE_ENEMY_ATTACK = 15;
+    private static final int BASE_ENEMY_DEFENSE = 20;
     private static final int HAZARD_DAMAGE = 20;
     private static String defaultHazard = "\ud83c\udf2a";
     private static String defaultEnemy = "\ud83e\udd81";
@@ -178,7 +183,8 @@ class EarthRealm extends Realm {
             throw new IllegalArgumentException("Position and difficulty cannot be null.");
         int scaledHealth = (int) (BASE_ENEMY_HEALTH * difficulty.getHealthMultiplier());
         int scaledAttack = (int) (BASE_ENEMY_ATTACK * difficulty.getDamageMultiplier());
-        return new Enemy(position, enemyStr, scaledHealth, scaledAttack);
+        int scaledDefense = (int) (BASE_ENEMY_DEFENSE * difficulty.getDamageMultiplier());
+        return new Enemy(position, enemyStr, scaledHealth, scaledAttack, scaledDefense);
     }
 
     @Override

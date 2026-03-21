@@ -20,4 +20,12 @@ public abstract class InventoryItem {
         this.quantity = quantity;
     }
 
+    public void pickup(){
+        this.quantity++;
+    }
+
+    public void drop(){
+        this.quantity--;
+    }
+
 }

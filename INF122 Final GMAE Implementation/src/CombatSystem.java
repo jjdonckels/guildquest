@@ -9,7 +9,7 @@ public class CombatSystem {
             throw new IllegalStateException("Defeated attacker cannot attack.");
         if (!defender.isAlive())
             throw new IllegalStateException("Cannot attack a defeated defender.");
-        int damage = calculateDamage(attacker);
+        int damage = Math.toIntExact(Math.round(calculateDamage(attacker) - (0.25 * calculateDefense(defender))));
         defender.takeDamage(damage);
         if (attacker instanceof PlayableCharacter) {
             PlayableCharacter pc = (PlayableCharacter) attacker;
@@ -28,5 +28,17 @@ public class CombatSystem {
             return e.getAttackPower();
         }
         throw new IllegalArgumentException("Unsupported attacker type: " + attacker);
+    }
+
+    private int calculateDefense(Entity defender) {
+        if (defender instanceof PlayableCharacter) {
+            PlayableCharacter pc = (PlayableCharacter) defender;
+            return pc.getDefense();
+        }
+        if (defender instanceof Enemy) {
+            Enemy e = (Enemy) defender;
+            return e.getDefense();
+        }
+        throw new IllegalArgumentException("Unsupported attacker type: " + defender);
     }
 }
