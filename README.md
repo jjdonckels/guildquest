@@ -3,16 +3,10 @@ This project is a mini-adventure game framework built for the GuildQuest world. 
 
 
 ## How to Run
-1. Navigate to the `src` folder:
+1. Download gmae.jar from the root directory.
+2. Make sure you have jdk 25 or newer.
+3. Run the executable jar file. 
 ```bash
-cd INF122 Final GMAE Implementation/src
+java -jar gmae.jar
 ```
 
-2. Compile the Program:
-```bash
-javac -encoding UTF-8 Main.java
-```
-3. Run the game:
-```bash
-java Main
- ```
