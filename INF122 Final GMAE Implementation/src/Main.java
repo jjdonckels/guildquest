@@ -1,24 +1,58 @@
 import java.util.Random;
-
 public class Main {
+    public static boolean debug = true;
     public static void main(String[] args) {
         EscortGame game = EscortGame.builder()
                 .setSeed(12345L)
-                .setDifficulty(Difficulty.MEDIUM)
+                .setDifficulty(Difficulty.EASY)
                 .setRealm(new FireRealm())
                 .build();
 
         game.start();
-
-        System.out.println("Realm: " + game.getRealm().getName());
-        System.out.println("Seed: " + game.getSeed());
-        System.out.println("Start: " + game.getStartPosition());
-        System.out.println("End: " + game.getEndPosition());
+        game.getBoard().render();
         System.out.println();
 
-        game.getBoard().render();
+        for (int i = 0; i < 500 && !game.isGameOver(); i++) {
+            PlayableCharacter current = game.getPlayers().get(game.getCurrentTurn() % game.getPlayers().size());
+            game.processTurn(current);
+
+            if (game.checkWinCondition()) {
+                game.getBoard().render();
+                System.out.println("Players win!");
+                break;
+            }
+
+            if (game.checkLoseCondition()) {
+                game.getBoard().render();
+                System.out.println("Players lose!");
+                break;
+            }
+
+            game.getBoard().render();
+            System.out.println();
+        }
     }
 }
+
+//public class Main {
+//    public static void main(String[] args) {
+//        EscortGame game = EscortGame.builder()
+//                .setSeed(12345L)
+//                .setDifficulty(Difficulty.MEDIUM)
+//                .setRealm(new FireRealm())
+//                .build();
+//
+//        game.start();
+//
+//        System.out.println("Realm: " + game.getRealm().getName());
+//        System.out.println("Seed: " + game.getSeed());
+//        System.out.println("Start: " + game.getStartPosition());
+//        System.out.println("End: " + game.getEndPosition());
+//        System.out.println();
+//
+//        game.getBoard().render();
+//    }
+//}
 
 //public class Main {
 //    public static void main(String[] args) {

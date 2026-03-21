@@ -3,6 +3,8 @@ public class Enemy extends Entity {
 
     public Enemy(Position position, String symbol, int maxHealth, int attackPower) {
         super(position, maxHealth, symbol);
+        if (Main.debug)
+            super.setSymbol("E");
         if (attackPower < 0)
             throw new IllegalArgumentException("Attack power cannot be negative.");
         this.attackPower = attackPower;
