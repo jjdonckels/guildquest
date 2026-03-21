@@ -86,5 +86,7 @@ public abstract class Entity {
 class Destination extends Entity {
     public Destination(Position position) {
         super(position, 0, "\ud83c\udfc1");
+        if (Main.debug)
+            super.setSymbol("D");
     }
 }
