@@ -2,9 +2,11 @@ import java.util.Scanner;
 
 public class MenuSystem {
     private final Scanner scanner;
+    private final GameHistoryManager historyManager;
 
     public MenuSystem() {
         this.scanner = new Scanner(System.in);
+        this.historyManager = new GameHistoryManager();
     }
 
     public void run() {
@@ -13,10 +15,16 @@ public class MenuSystem {
 
         while (true) {
             int gameChoice = showGameSelectMenu();
-            if (gameChoice == 3) {
+            if (gameChoice == 4) {
                 System.out.println("Thanks for playing! Goodbye.");
                 break;
             }
+            if (gameChoice == 3) {
+                System.out.println();
+                historyManager.printHistory();
+                System.out.println();
+                continue;
+}
 
             boolean isCustom = showDefaultOrCustomMenu();
             MiniGame game;
@@ -26,6 +34,9 @@ public class MenuSystem {
                 
             } else {
                 game = buildRelicHunt(players, isCustom);
+            }
+            if (game instanceof  EscortGame){
+                ((EscortGame)game).gameLoop();
             }
             
             if (!showPlayAgainMenu()) break;
@@ -83,16 +94,18 @@ public class MenuSystem {
             System.out.println("--- Choose a Mini-Adventure ---");
             System.out.println("1. Escort Service");
             System.out.println("2. Relic Hunt");
-            System.out.println("3. Exit");
-            System.out.print("Enter choice (1-3): ");
+            System.out.println("3. View Game History");
+            System.out.println("4. Exit");
+            System.out.print("Enter choice (1-4): ");
 
             String input = scanner.nextLine().trim();
             switch (input) {
                 case "1": return 1;
                 case "2": return 2;
                 case "3": return 3;
+                case "4": return 4;
                 default:
-                    System.out.println("Invalid choice. Please enter 1, 2, or 3.");
+                    System.out.println("Invalid choice. Please enter 1, 2, 3, or 4.");
                     System.out.println();
             }
         }
@@ -132,6 +145,7 @@ public class MenuSystem {
         }
 
         EscortGame game = builder.build();
+        game.setHistoryManager(historyManager);
         game.start();
         
         System.out.println();
