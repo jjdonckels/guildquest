@@ -1,38 +1,67 @@
 import java.util.Random;
-public class Main {
-    public static boolean debug = true;
-    public static void main(String[] args) {
-        new MenuSystem().run();
-        EscortGame game = EscortGame.builder()
-                .setSeed(12345L)
-                .setDifficulty(Difficulty.EASY)
-                .setRealm(new FireRealm())
-                .build();
+public class GMAE {
+    private static GMAE instance;
 
-        game.start();
-        game.getBoard().render();
-        System.out.println();
-
-        for (int i = 0; i < 500 && !game.isGameOver(); i++) {
-            PlayableCharacter current = game.getPlayers().get(game.getCurrentTurn() % game.getPlayers().size());
-            game.processTurn(current);
-
-            if (game.checkWinCondition()) {
-                game.getBoard().render();
-                System.out.println("Players win!");
-                break;
-            }
-
-            if (game.checkLoseCondition()) {
-                game.getBoard().render();
-                System.out.println("Players lose!");
-                break;
-            }
-
-            game.getBoard().render();
-            System.out.println();
-        }
+    private MenuSystem menuSystem;
+    private GMAE() {
+        menuSystem = new MenuSystem();
     }
+    public void run() {
+        menuSystem.run();
+        System.out.println("Exiting GMAE");
+        System.exit(0);
+    }
+
+    public static GMAE getInstance()
+    {
+        if (instance == null)
+        {
+            instance = new GMAE();
+        }
+        return instance;
+    }
+
+    public static void main(String[] args) {
+
+        GMAE gmae = GMAE.getInstance();
+        gmae.run();
+//
+//        new MenuSystem().run();
+//        System.exit(0);
+//        EscortGame game = EscortGame.builder()
+//                .setSeed(12345L)
+//                .setDifficulty(Difficulty.EASY)
+//                .setRealm(new FireRealm())
+//                .build();
+//
+//        game.start();
+//        game.getBoard().render();
+//        System.out.println();
+//
+//        for (int i = 0; i < 500 && !game.isGameOver(); i++) {
+//            PlayableCharacter current = game.getPlayers().get(game.getCurrentTurn() % game.getPlayers().size());
+//            game.processTurn(current);
+//
+//            if (game.checkWinCondition()) {
+//                game.getBoard().render();
+//                System.out.println("Players win!");
+//                break;
+//            }
+//
+//            if (game.checkLoseCondition()) {
+//                game.getBoard().render();
+//                System.out.println("Players lose!");
+//                break;
+//            }
+//
+//            game.getBoard().render();
+//            System.out.println();
+//        }
+    }
+}
+
+class Main {
+    public static boolean debug = false;
 }
 
 // public class Main {

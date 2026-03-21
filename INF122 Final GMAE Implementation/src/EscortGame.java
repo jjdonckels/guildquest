@@ -27,6 +27,8 @@ public class EscortGame implements MiniGame {
     private boolean isGameOver;
     private int currentTurn;
 
+    private GameHistoryManager historyManager;
+
     private EscortGame(Builder builder) {
         this.seed = builder.seed;
         this.difficulty = builder.difficulty;
@@ -48,6 +50,10 @@ public class EscortGame implements MiniGame {
         this.isGameOver = false;
         this.currentTurn = 0;
         this.scanner = new Scanner(System.in);
+    }
+
+    public void setHistoryManager(GameHistoryManager historyManager) {
+        this.historyManager = historyManager;
     }
 
     public static Builder builder() {return new Builder();}
@@ -109,7 +115,8 @@ public class EscortGame implements MiniGame {
         return escorteeDead || allPlayersDead;
     }
 
-    public void gameLoop() {
+    public List<GameHistoryEntry> gameLoop() {
+        List<GameHistoryEntry> results = new ArrayList<>();
         while (!isGameOver) {
             board.render();
             PlayableCharacter currentPlayer = players.get(currentTurn % players.size());
@@ -117,16 +124,20 @@ public class EscortGame implements MiniGame {
             if (checkWinCondition()) {
                 isGameOver = true;
                 System.out.println("Victory! Successfully escorted " + escortee.getSymbol() + " to the destination!");
-                break;
+                results.add(new GameHistoryEntry("escort", seed, players.get(0).getName(), GameResult.WIN));
+                results.add(new GameHistoryEntry("escort", seed, players.get(1).getName(), GameResult.WIN));
+                return results;
             }
             if (checkLoseCondition()) {
                 isGameOver = true;
                 System.out.println("Game Over! You couldn't successfully escort " + escortee.getSymbol()
                         + " to the destination.");
-                break;
+                results.add(new GameHistoryEntry("escort", seed, players.get(0).getName(), GameResult.LOSS));
+                results.add(new GameHistoryEntry("escort", seed, players.get(1).getName(), GameResult.LOSS));
+                return results;
             }
-            currentTurn++;
         }
+        return null;
     }
 
     public void processTurn(PlayableCharacter player) {
@@ -134,7 +145,7 @@ public class EscortGame implements MiniGame {
             if (player == null)
                 throw new IllegalArgumentException("Player cannot be null.");
             System.out.println("--- Turn " + currentTurn + " (" + player.getName() + ") ---");
-            pause();
+//            pause();
             if (!player.isAlive()) {
                 System.out.println(player.getName() + " is defeated and cannot act.");
                 currentTurn++;
@@ -197,7 +208,7 @@ public class EscortGame implements MiniGame {
                     if (enemy.getPosition().equals(target.getPosition()) && target.isAlive()) {
                         combatSystem.resolveAttack(enemy, target);
                         System.out.println("Enemy attacked " + target.getName()
-                            + " for " + enemy.getAttackPower() + " damage.");
+                                + " for " + enemy.getAttackPower() + " damage.");
                         if (!target.isAlive())
                             System.out.println(target.getName() + " has been defeated.");
                     }
@@ -280,7 +291,7 @@ public class EscortGame implements MiniGame {
 
     private void pause() {
         while (true) {
-            System.out.println("Press c to continue or r to reset.");
+            System.out.println("Press c to continue, r to reset, or x to exit everything.");
             String input = scanner.nextLine().trim();
             if (input.equalsIgnoreCase("c"))
                 return;
@@ -288,11 +299,15 @@ public class EscortGame implements MiniGame {
                 reset();
                 return;
             }
+            else if (input.equalsIgnoreCase("x")) {
+                System.out.println("Exiting program.");
+                System.exit(0);
+            }
         }
     }
 
     private void handlePlayerMovement(PlayableCharacter player) {
-        board.render();
+//        board.render();
         System.out.println(player.getName() + " Health: " + player.getHealth() + "/" + player.getMaxHealth());
         System.out.println("Escortee Health: " + escortee.getHealth() + "/" + escortee.getMaxHealth());
         while (true) {

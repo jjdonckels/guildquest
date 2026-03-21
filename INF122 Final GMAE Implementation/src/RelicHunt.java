@@ -141,7 +141,8 @@ public class RelicHunt implements MiniGame {
         return livingPlayers == 0;
     }
 
-    public void gameLoop() {
+    public List<GameHistoryEntry> gameLoop() {
+        List<GameHistoryEntry> results = new ArrayList<>();
         while (!isGameOver) {
             board.render();
 
@@ -154,15 +155,24 @@ public class RelicHunt implements MiniGame {
                 updateLosersAfterWin();
 
                 System.out.println("Relic found! " + winner.getName() + " wins!");
-                break;
+                results.add(new GameHistoryEntry("relic hunt", seed, winner.getName(), GameResult.WIN));
+                if (players.get(0).getName().equals(winner.getName()))
+                    results.add(new GameHistoryEntry("relic hunt", seed, players.get(1).getName(), GameResult.LOSS));
+                else
+                    results.add(new GameHistoryEntry("relic hunt", seed, players.get(0).getName(), GameResult.LOSS));
+                return results;
+
             }
 
             if (checkLoseCondition()) {
                 isGameOver = true;
                 System.out.println("All players have been defeated. Nobody wins.");
-                break;
+                results.add(new GameHistoryEntry("relic hunt", seed, players.get(0).getName(), GameResult.LOSS));
+                results.add(new GameHistoryEntry("relic hunt", seed, players.get(1).getName(), GameResult.LOSS));
+                return results;
             }
         }
+        return null;
     }
 
     public void processTurn(PlayableCharacter player) {
@@ -377,7 +387,7 @@ public class RelicHunt implements MiniGame {
     }
 
     private void handlePlayerMovement(PlayableCharacter player) {
-        board.render();
+//        board.render();
         System.out.println(player.getName() + " Health: " + player.getHealth() + "/" + player.getMaxHealth());
         while (true) {
             Direction direction = promptForDirection(player);

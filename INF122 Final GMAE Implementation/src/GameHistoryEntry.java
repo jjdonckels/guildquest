@@ -6,21 +6,21 @@ import java.util.List;
 public class GameHistoryEntry {
     private final String gameName;
     private final long seed;
-    private final List<String> players;
+    private final String player;
     private final GameResult result;
 
     //constructor for creating game history after game ends
-    public GameHistoryEntry(String gameName, long seed, List<String> players, GameResult result) {
+    public GameHistoryEntry(String gameName, long seed, String player, GameResult result) {
         if (gameName == null || gameName.isBlank())
             throw new IllegalArgumentException("Game name cannot be null or blank.");
-        if (players == null || players.isEmpty())
-            throw new IllegalArgumentException("Players cannot be null or empty.");
+        if (player == null || player.isEmpty())
+            throw new IllegalArgumentException("Player cannot be null or empty.");
         if (result == null)
             throw new IllegalArgumentException("Result cannot be null.");
 
         this.gameName = gameName;
         this.seed = seed;
-        this.players = new ArrayList<>(players);
+        this.player = player;
         this.result = result;
     }
     //getter methods
@@ -28,7 +28,7 @@ public class GameHistoryEntry {
 
     public long getSeed() { return seed; }
 
-    public List<String> getPlayers() { return new ArrayList<>(players); }
+    public String getPlayer() { return player;}
 
     public GameResult getResult() { return result; }
 
@@ -37,7 +37,7 @@ public class GameHistoryEntry {
     public String toString() {
         return gameName
                 + " | Seed: " + seed
-                + " | Players: " + players
+                + " | Player: " + player
                 + " | Result: " + result;
     }
 }

@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Scanner;
 
 public class MenuSystem {
@@ -31,12 +32,19 @@ public class MenuSystem {
 
             if (gameChoice == 1) {
                 game = buildEscortGame(players, isCustom);
-                
             } else {
                 game = buildRelicHunt(players, isCustom);
             }
+
             if (game instanceof  EscortGame){
-                ((EscortGame)game).gameLoop();
+                List<GameHistoryEntry> results = ((EscortGame)game).gameLoop();
+                historyManager.record(results.get(0));
+                historyManager.record(results.get(1));
+            }
+            if (game instanceof RelicHunt) {
+                List<GameHistoryEntry> results = ((RelicHunt)game).gameLoop();
+                historyManager.record(results.get(0));
+                historyManager.record(results.get(1));
             }
             
             if (!showPlayAgainMenu()) break;
@@ -157,7 +165,7 @@ public class MenuSystem {
         System.out.println("End: " + game.getEndPosition());
         System.out.println();
 
-        game.getBoard().render();
+//        game.getBoard().render();
 
         return game;
     }
@@ -168,7 +176,29 @@ public class MenuSystem {
 
     private MiniGame buildRelicHunt(PlayableCharacter[] players, boolean isCustom) {
         // TODO: Replace with RelicHunt.builder() once RelicHunt is implemented
-        throw new UnsupportedOperationException("Relic Hunt is not yet implemented.");
+        RelicHunt.Builder builder = RelicHunt.builder()
+                .setPlayers(players[0], players[1]);
+
+        if (isCustom) {
+            builder.setDifficulty(promptDifficulty())
+                    .setSeed(promptSeed())
+                    .setRealm(promptRealm());
+        }
+
+        RelicHunt game = builder.build();
+        game.setHistoryManager(historyManager);
+        game.start();
+
+        System.out.println();
+        System.out.println("Starting Relic Hunt...");
+        System.out.println("Realm:      " + game.getRealm().getName());
+        System.out.println("Difficulty: " + game.getDifficulty());
+        System.out.println("Seed:       " + game.getSeed());
+        System.out.println();
+
+//        game.getBoard().render();
+
+        return game;
     }
 
     // -------------------------
