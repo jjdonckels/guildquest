@@ -125,7 +125,6 @@ public class EscortGame implements MiniGame {
                         + " to the destination.");
                 break;
             }
-            currentTurn++;
         }
     }
 
@@ -134,7 +133,7 @@ public class EscortGame implements MiniGame {
             if (player == null)
                 throw new IllegalArgumentException("Player cannot be null.");
             System.out.println("--- Turn " + currentTurn + " (" + player.getName() + ") ---");
-            pause();
+//            pause();
             if (!player.isAlive()) {
                 System.out.println(player.getName() + " is defeated and cannot act.");
                 currentTurn++;
@@ -280,13 +279,17 @@ public class EscortGame implements MiniGame {
 
     private void pause() {
         while (true) {
-            System.out.println("Press c to continue or r to reset.");
+            System.out.println("Press c to continue, r to reset, or x to exit everything.");
             String input = scanner.nextLine().trim();
             if (input.equalsIgnoreCase("c"))
                 return;
             else if (input.equalsIgnoreCase("r")) {
                 reset();
                 return;
+            }
+            else if (input.equalsIgnoreCase("x")) {
+                System.out.println("Exiting program.");
+                System.exit(0);
             }
         }
     }

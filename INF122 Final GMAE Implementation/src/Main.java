@@ -1,6 +1,21 @@
 import java.util.Random;
+
+//public class Main {
+//    public static boolean debug = false;
+//    public static void main(String[] args) {
+//        RelicHunt game = RelicHunt.builder()
+//                .setSeed(12345L)
+//                .setDifficulty(Difficulty.MEDIUM)
+//                .setRealm(new EarthRealm())
+//                .build();
+//
+//        game.start();
+//        game.gameLoop();
+//    }
+//}
+
 public class Main {
-    public static boolean debug = true;
+    public static boolean debug = false;
     public static void main(String[] args) {
         EscortGame game = EscortGame.builder()
                 .setSeed(12345L)
@@ -9,6 +24,8 @@ public class Main {
                 .build();
 
         game.start();
+        game.gameLoop();
+        System.exit(1);
         game.getBoard().render();
         System.out.println();
 

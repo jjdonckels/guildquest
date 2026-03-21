@@ -3,6 +3,8 @@ public class Relic extends PowerUp {
 
     public Relic(Position position) {
         super(position, "🏆");
+        if (Main.debug)
+            setSymbol("X");
         this.holder = null;
     }
 
