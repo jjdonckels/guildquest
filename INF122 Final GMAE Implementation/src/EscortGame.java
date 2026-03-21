@@ -91,7 +91,9 @@ public class EscortGame implements MiniGame {
     }
 
     @Override
-    public void reset() {start();}
+    public void reset() {
+        throw new RuntimeException("EscortGame has been reset.");
+    }
 
     @Override
     public boolean checkWinCondition() {
@@ -128,42 +130,47 @@ public class EscortGame implements MiniGame {
     }
 
     public void processTurn(PlayableCharacter player) {
-        if (player == null)
-            throw new IllegalArgumentException("Player cannot be null.");
-        System.out.println("--- Turn " + currentTurn + " (" + player.getName() + ") ---");
-        pause();
-        if (!player.isAlive()) {
-            System.out.println(player.getName() + " is defeated and cannot act.");
+        try {
+            if (player == null)
+                throw new IllegalArgumentException("Player cannot be null.");
+            System.out.println("--- Turn " + currentTurn + " (" + player.getName() + ") ---");
+            pause();
+            if (!player.isAlive()) {
+                System.out.println(player.getName() + " is defeated and cannot act.");
+                currentTurn++;
+                if (currentTurn % players.size() == 0)
+                    processEnemyTurns();
+                return;
+            }
+            int roll = dice.roll(random);
+            System.out.println(player.getName() + " rolled a " + roll + ".");
+            boolean moveSucceeded = roll >= 10;
+            if (Main.debug) {
+                moveSucceeded = true;
+            }
+            if (moveSucceeded) {
+                System.out.println("Movement succeeded.");
+                pause();
+                handlePlayerMovement(player);
+            } else {
+                System.out.println("Movement failed. No movement this turn.");
+                pause();
+            }
+            if (escortee != null && escortee.isAlive() && !checkWinCondition()) {
+                //            escortee.followClosestPlayerOrEndPoint(players, endPosition);
+                escortee.followEndPoint(endPosition);
+                if (board.isValidMove(escortee.getPosition())) {
+                    board.rebuildEntityMap();
+                    handleEscorteeTileInteractions();
+                }
+            }
             currentTurn++;
             if (currentTurn % players.size() == 0)
                 processEnemyTurns();
-            return;
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+            start();
         }
-        int roll = dice.roll(random);
-        System.out.println(player.getName() + " rolled a " + roll + ".");
-        boolean moveSucceeded = roll >= 10;
-        if (Main.debug) {
-            moveSucceeded = true;
-        }
-        if (moveSucceeded) {
-            System.out.println("Movement succeeded.");
-            pause();
-            handlePlayerMovement(player);
-        } else {
-            System.out.println("Movement failed. No movement this turn.");
-            pause();
-        }
-        if (escortee != null && escortee.isAlive() && !checkWinCondition()) {
-//            escortee.followClosestPlayerOrEndPoint(players, endPosition);
-            escortee.followEndPoint(endPosition);
-            if (board.isValidMove(escortee.getPosition())) {
-                board.rebuildEntityMap();
-                handleEscorteeTileInteractions();
-            }
-        }
-        currentTurn++;
-        if (currentTurn % players.size() == 0)
-            processEnemyTurns();
     }
 
     private void processEnemyTurns() {
@@ -273,9 +280,14 @@ public class EscortGame implements MiniGame {
 
     private void pause() {
         while (true) {
-            System.out.println("Press c to continue.");
-            if (scanner.nextLine().trim().equalsIgnoreCase("c"))
+            System.out.println("Press c to continue or r to reset.");
+            String input = scanner.nextLine().trim();
+            if (input.equalsIgnoreCase("c"))
                 return;
+            else if (input.equalsIgnoreCase("r")) {
+                reset();
+                return;
+            }
         }
     }
 
