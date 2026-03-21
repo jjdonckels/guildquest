@@ -16,7 +16,6 @@ public class EscortGame implements MiniGame {
     private final long seed;
     private Random random;
     private final Dice dice;
-    private GameHistoryManager historyManager;
 
     private Position startPosition;
     private Position endPosition;
@@ -59,10 +58,6 @@ public class EscortGame implements MiniGame {
 
     public Dice getDice() {return dice;}
 
-    public void setHistoryManager(GameHistoryManager historyManager) {
-        this.historyManager = historyManager;
-    }
-
     public Position getStartPosition() {return startPosition;}
 
     public Position getEndPosition() {return endPosition;}
@@ -104,23 +99,11 @@ public class EscortGame implements MiniGame {
             processTurn(currentPlayer);
             if (checkWinCondition()) {
                 isGameOver = true;
-                if (historyManager != null) {
-                    List<String> playerNames = new ArrayList<>();
-                    for (PlayableCharacter player : players)
-                        playerNames.add(player.getName());
-                    historyManager.record(new GameHistoryEntry("EscortGame", seed, playerNames, GameResult.COOP_SUCCESS));
-                }
-            System.out.println("Victory! Successfully escorted " + escortee.getSymbol() + " to the destination!");
-            break;
+                System.out.println("Victory! Successfully escorted " + escortee.getSymbol() + " to the destination!");
+                break;
             }
             if (checkLoseCondition()) {
                 isGameOver = true;
-                if (historyManager != null) {
-                    List<String> playerNames = new ArrayList<>();
-                    for (PlayableCharacter player : players)
-                        playerNames.add(player.getName());
-                    historyManager.record(new GameHistoryEntry("EscortGame", seed, playerNames, GameResult.COOP_FAIL));
-                }
                 System.out.println("Game Over! You couldn't successfully escort " + escortee.getSymbol()
                         + " to the destination.");
                 break;
