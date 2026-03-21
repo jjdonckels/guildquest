@@ -11,4 +11,12 @@ public class Weapon extends InventoryItem {
         this.damage = damage;
     }
 
+    @Override
+    public String toString(){
+        return String.format("""
+                \n%s (x%s)
+                %s
+                Does %s damage.
+                """, super.getName(), super.getQuantity(), super.getDescription(), this.damage);
+    }
 }

@@ -20,11 +20,4 @@ public abstract class InventoryItem {
         this.quantity = quantity;
     }
 
-    @Override
-    public String toString(){
-        return String.format("""
-                \n%s (x%s)
-                %s
-                """, name, quantity, description);
-    }
 }
