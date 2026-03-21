@@ -24,7 +24,7 @@ public class Board {
         this.entityMap = new HashMap<>();
         this.viewportStartX = 0;
         this.viewportWidth = width;
-        this.cellRenderWidth = 3;
+        this.cellRenderWidth = 4;
     }
 
     public int getWidth() {return width;}
@@ -132,18 +132,92 @@ public class Board {
 
     public void render() {
         int endX = Math.min(width, viewportStartX + viewportWidth);
+        // Print column labels
+        StringBuilder header = new StringBuilder();
+        header.append(padRowLabel(" "));
+        for (int x = viewportStartX; x < endX; x++) {
+            header.append("|").append(padCell(String.valueOf(x)));
+        }
+        header.append("|");
+        System.out.println(header);
+        // Print separator line
+        System.out.println(buildSeparatorLine(endX - viewportStartX));
+        // Print board rows
         for (int y = 0; y < height; y++) {
             StringBuilder row = new StringBuilder();
+            row.append(padRowLabel(String.valueOf(y)));
             for (int x = viewportStartX; x < endX; x++) {
                 Position position = new Position(x, y);
                 List<Entity> entitiesAtPosition = getEntitiesAt(position);
-                String cellSymbol = ".";
-                if (!entitiesAtPosition.isEmpty())
-                    cellSymbol = entitiesAtPosition.get(0).getSymbol();
-                row.append(padCell(cellSymbol));
+                String cellContent = buildCellContent(entitiesAtPosition);
+                row.append("|").append(padCell(cellContent));
             }
+            row.append("|");
             System.out.println(row);
         }
+    }
+
+    private String buildSeparatorLine(int visibleWidth) {
+        StringBuilder line = new StringBuilder();
+        line.append(padRowLabel(""));
+        for (int i = 0; i < visibleWidth; i++) {
+            line.append("+");
+            for (int j = 0; j < cellRenderWidth; j++)
+                line.append("-");
+        }
+        line.append("+");
+        return line.toString();
+    }
+
+    private String padRowLabel(String label) {
+        int rowLabelWidth = 4;
+        if (label == null)
+            label = "";
+        if (label.length() >= rowLabelWidth)
+            return label.substring(0, rowLabelWidth);
+        StringBuilder padded = new StringBuilder(label);
+        while (padded.length() < rowLabelWidth)
+            padded.insert(0, ' ');
+        return padded.toString();
+    }
+
+    private String buildCellContent(List<Entity> entitiesAtPosition) {
+        if (entitiesAtPosition == null || entitiesAtPosition.isEmpty())
+            return ".";
+        List<Entity> sortedEntities = sortEntitiesForRendering(entitiesAtPosition);
+        StringBuilder content = new StringBuilder();
+        for (Entity entity : sortedEntities) {
+            String symbol = entity.getSymbol();
+            if (symbol != null && !symbol.isBlank())
+                content.append(symbol);
+        }
+        if (content.length() <= cellRenderWidth)
+            return content.toString();
+        if (cellRenderWidth == 1)
+            return "+";
+        return content.substring(0, cellRenderWidth - 1) + "+";
+    }
+
+    private List<Entity> sortEntitiesForRendering(List<Entity> entitiesAtPosition) {
+        List<Entity> sorted = new ArrayList<>(entitiesAtPosition);
+        sorted.sort((a, b) -> Integer.compare(getRenderPriority(a), getRenderPriority(b)));
+        return sorted;
+    }
+
+    private int getRenderPriority(Entity entity) {
+        if (entity instanceof PlayableCharacter)
+            return 1;
+        if (entity instanceof Escortee)
+            return 2;
+        if (entity instanceof Enemy)
+            return 3;
+        if (entity instanceof PowerUp)
+            return 4;
+        if (entity instanceof Hazard)
+            return 5;
+        if (entity instanceof Destination)
+            return 6;
+        return Integer.MAX_VALUE;
     }
 
     private String padCell(String content) {
@@ -153,7 +227,7 @@ public class Board {
             return content;
         StringBuilder padded = new StringBuilder(content);
         while (padded.length() < cellRenderWidth)
-            padded.append(" ");
+            padded.append(' ');
         return padded.toString();
     }
 }

@@ -17,6 +17,8 @@ class StrengthPowerUp extends PowerUp {
     private static final int BOOST_TURNS = 3;
     public StrengthPowerUp(Position position) {
         super(position, "💪");
+        if (Main.debug)
+            setSymbol("S");
     }
     @Override
     public void applyEffect(PlayableCharacter character) {
@@ -30,6 +32,8 @@ class HealthPowerUp extends PowerUp {
     private static final int HEAL_AMOUNT = 50;
     public HealthPowerUp(Position position) {
         super(position, "❤️");
+        if (Main.debug)
+            setSymbol("R");
     }
     @Override
     public void applyEffect(PlayableCharacter character) {

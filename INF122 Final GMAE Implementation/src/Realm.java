@@ -77,16 +77,28 @@ class FireRealm extends Realm {
         super("Volcano", "Lava, fire, and a whole lot of heat.");
         hazardStr = defaultHazard;
         enemyStr = defaultEnemy;
+        if (Main.debug) {
+            hazardStr = "H";
+            enemyStr = "E";
+        }
     }
     public FireRealm(String name, String description) {
         super(name, description);
         hazardStr = defaultHazard;
         enemyStr = defaultEnemy;
+        if (Main.debug) {
+            hazardStr = "H";
+            enemyStr = "E";
+        }
     }
     public FireRealm(String name, String description, String hazard, String enemy) {
         super(name, description);
         hazardStr = hazard;
         enemyStr = enemy;
+        if (Main.debug) {
+            hazardStr = "H";
+            enemyStr = "E";
+        }
     }
 
     @Override
@@ -121,16 +133,28 @@ class WaterRealm extends Realm {
         super("Ocean", "Waves, currents, and plenty of salt.");
         hazardStr = defaultHazard;
         enemyStr = defaultEnemy;
+        if (Main.debug) {
+            hazardStr = "H";
+            enemyStr = "E";
+        }
     }
     public WaterRealm(String name, String description) {
         super(name, description);
         hazardStr = defaultHazard;
         enemyStr = defaultEnemy;
+        if (Main.debug) {
+            hazardStr = "H";
+            enemyStr = "E";
+        }
     }
     public WaterRealm(String name, String description, String hazard, String enemy) {
         super(name, description);
         hazardStr = hazard;
         enemyStr = enemy;
+        if (Main.debug) {
+            hazardStr = "H";
+            enemyStr = "E";
+        }
     }
 
     @Override
@@ -165,16 +189,28 @@ class EarthRealm extends Realm {
         super("Land", "Lions, tornadoes, and a whole lot of rock.");
         hazardStr = defaultHazard;
         enemyStr = defaultEnemy;
+        if (Main.debug) {
+            hazardStr = "H";
+            enemyStr = "E";
+        }
     }
     public EarthRealm(String name, String description) {
         super(name, description);
         hazardStr = defaultHazard;
         enemyStr = defaultEnemy;
+        if (Main.debug) {
+            hazardStr = "H";
+            enemyStr = "E";
+        }
     }
     public EarthRealm(String name, String description, String hazard, String enemy) {
         super(name, description);
         hazardStr = hazard;
         enemyStr = enemy;
+        if (Main.debug) {
+            hazardStr = "H";
+            enemyStr = "E";
+        }
     }
 
     @Override

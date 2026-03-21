@@ -1,14 +1,37 @@
-
-// TODO: 
-// You could also work on the menus for running the entire thing: we'll need menu logic 
-// and inputs to get player and character information that fits whoever's 
-// subsystem we use for that, and we also need a menu to choose which mini game to play 
-// and whether they want to play the default version or a custom version with a unique seed 
-// and difficulty
-
+import java.util.Random;
 public class Main {
+    public static boolean debug = true;
     public static void main(String[] args) {
         new MenuSystem().run();
+        EscortGame game = EscortGame.builder()
+                .setSeed(12345L)
+                .setDifficulty(Difficulty.EASY)
+                .setRealm(new FireRealm())
+                .build();
+
+        game.start();
+        game.getBoard().render();
+        System.out.println();
+
+        for (int i = 0; i < 500 && !game.isGameOver(); i++) {
+            PlayableCharacter current = game.getPlayers().get(game.getCurrentTurn() % game.getPlayers().size());
+            game.processTurn(current);
+
+            if (game.checkWinCondition()) {
+                game.getBoard().render();
+                System.out.println("Players win!");
+                break;
+            }
+
+            if (game.checkLoseCondition()) {
+                game.getBoard().render();
+                System.out.println("Players lose!");
+                break;
+            }
+
+            game.getBoard().render();
+            System.out.println();
+        }
     }
 }
 
@@ -31,6 +54,26 @@ public class Main {
 //         game.getBoard().render();
 //     }
 // }
+
+//public class Main {
+//    public static void main(String[] args) {
+//        EscortGame game = EscortGame.builder()
+//                .setSeed(12345L)
+//                .setDifficulty(Difficulty.MEDIUM)
+//                .setRealm(new FireRealm())
+//                .build();
+//
+//        game.start();
+//
+//        System.out.println("Realm: " + game.getRealm().getName());
+//        System.out.println("Seed: " + game.getSeed());
+//        System.out.println("Start: " + game.getStartPosition());
+//        System.out.println("End: " + game.getEndPosition());
+//        System.out.println();
+//
+//        game.getBoard().render();
+//    }
+//}
 
 //public class Main {
 //    public static void main(String[] args) {

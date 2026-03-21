@@ -3,6 +3,8 @@ public class Hazard extends Entity {
 
     public Hazard(Position position, String symbol, int damage) {
         super(position, 0, symbol);
+        if (Main.debug)
+            super.setSymbol("H");
         if (damage < 0)
             throw new IllegalArgumentException("Damage cannot be negative.");
         this.damage = damage;
